@@ -45,9 +45,40 @@ Open `index.html`. Each section has a `===` comment banner labeling what to edit
 ## Editing Brand Colors
 Open `css/styles.css` and edit the `:root` block at the very top.
 
-## Deploy to Netlify
-Push to GitHub → connect repo in Netlify → publish directory: `.`
-Netlify auto-deploys on every commit. No build command needed.
+## Preview & Deployment Workflow
 
-## Activating the Contact Form
-Add `name="contact" data-netlify="true"` to the `<form>` tag in index.html.
+### Step 1 — Enable GitHub Pages (live preview, no DNS needed)
+1. Go to **Settings → Pages** in this repository.
+2. Under *Source*, choose **GitHub Actions**.
+3. Push any commit to `main` — the `Deploy to GitHub Pages` workflow runs automatically.
+4. Your preview URL will be:
+   `https://<your-github-username>.github.io/<repository-name>/`
+   (e.g. `https://myron-nexuspartners.github.io/NP-redesign-2/`)
+5. Share that URL to review the live site before touching any DNS records.
+
+### Step 2 — Connect Netlify
+1. Log in to [Netlify](https://app.netlify.com) → **Add new site → Import an existing project**.
+2. Choose **GitHub** and select this repository (`NP-redesign-2`).
+3. Netlify settings (already in `netlify.toml` — no changes needed):
+   - **Branch to deploy:** `main`
+   - **Publish directory:** `.`
+   - **Build command:** *(leave blank)*
+4. Click **Deploy site**. Netlify will assign a free `*.netlify.app` preview URL.
+5. Verify everything looks correct at the Netlify preview URL before proceeding.
+
+### Step 3 — Activate the Contact Form
+Add `name="contact" data-netlify="true"` to the `<form>` tag in `index.html`:
+```html
+<form id="contactForm" name="contact" data-netlify="true" novalidate>
+```
+Push the change — Netlify detects the attribute automatically.
+
+### Step 4 — DNS Migration (custom domain)
+Only after verifying the Netlify preview:
+1. In Netlify: **Domain settings → Add custom domain** → enter your domain.
+2. Netlify will show you the DNS records to add (typically an `A` record or `CNAME`).
+3. In your DNS registrar/provider, update the records Netlify specifies.
+4. Enable **Force HTTPS** in Netlify once DNS propagates (usually < 1 hour).
+5. Your old host's DNS can be removed once the Netlify cert is issued and the site is live.
+
+---
